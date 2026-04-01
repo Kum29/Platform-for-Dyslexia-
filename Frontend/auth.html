@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LexiNote - Login & Signup</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <script src="script/auth.js" defer></script>
+
+    <style>
+        /* --- FONT PRESERVATION --- */
+        @font-face {
+            font-family: 'OpenDyslexic';
+            src: local('OpenDyslexic'), url('https://cdn.jsdelivr.net/npm/open-dyslexic@1.0.3/otf/OpenDyslexic-Regular.otf') format('opentype');
+            font-weight: normal; 
+            font-style: normal;
+        }
+
+        :root {
+            --navy: #000080;
+            --cream-bg: #fdfbf7;
+            --text-main: #222;
+            --soft-blue: #e6eef9;
+            --white: #ffffff;
+        }
+
+        body {
+            font-family: 'OpenDyslexic', Verdana, sans-serif;
+            font-weight: bold;
+            background-color: var(--cream-bg);
+            color: var(--text-main);
+            line-height: 1.8;
+            letter-spacing: 0.12em;
+            word-spacing: 0.16em;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar {
+            background-color: var(--white) !important;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 2rem;
+        }
+        .navbar-brand {
+            font-size: 32px;
+            color: var(--navy) !important;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .auth-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 60px 20px;
+        }
+
+        .auth-card {
+            background: var(--white);
+            border-radius: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 480px;
+            padding: 50px;
+        }
+
+        .auth-toggle {
+            display: flex;
+            background: var(--soft-blue);
+            border-radius: 15px;
+            margin-bottom: 35px;
+            padding: 6px;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            border: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: bold;
+            background: transparent;
+            transition: all 0.3s ease;
+            color: var(--navy);
+            font-family: 'OpenDyslexic', sans-serif;
+        }
+
+        .toggle-btn.active {
+            background: var(--navy);
+            color: var(--white) !important;
+        }
+
+        .form-label { margin-bottom: 10px; font-size: 1.1rem; }
+
+        .form-control {
+            border: 2px solid #cbd5e1;
+            border-radius: 14px;
+            padding: 14px;
+            font-family: 'OpenDyslexic', sans-serif;
+            margin-bottom: 20px;
+            background-color: #fafafa;
+        }
+
+        .btn-navy {
+            background: var(--navy);
+            color: var(--white);
+            border-radius: 14px;
+            padding: 16px;
+            font-weight: bold;
+            width: 100%;
+            border: none;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        .hidden { display: none !important; }
+
+        #authAlert {
+            border-radius: 14px;
+            margin-bottom: 25px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        footer { background: var(--white); border-top: 1px solid #eee; padding: 25px 0; }
+    </style>
+</head>
+<body>
+
+<header>
+    <nav class="navbar" role="navigation" aria-label="Main Navigation">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">LexiNote</a>
+        </div>
+    </nav>
+</header>
+
+<main class="auth-container">
+    <div class="auth-card">
+        <div class="auth-toggle" role="tablist">
+            <button class="toggle-btn active" id="loginTabBtn" role="tab" aria-selected="true" onclick="toggleAuth('login')">Login</button>
+            <button class="toggle-btn" id="signupTabBtn" role="tab" aria-selected="false" onclick="toggleAuth('signup')">Sign Up</button>
+        </div>
+
+        <div id="authAlert" class="alert hidden" role="alert" aria-live="assertive"></div>
+
+        <form id="loginForm">
+            <h2 class="text-center mb-4" style="color: var(--navy);">Welcome Back</h2>
+            <div class="mb-3">
+                <label for="loginEmail" class="form-label">Email Address</label>
+                <input type="email" id="loginEmail" class="form-control" placeholder="name@example.com" required autocomplete="username">
+            </div>
+            <div class="mb-3">
+                <label for="loginPassword" class="form-label">Password</label>
+                <input type="password" id="loginPassword" class="form-control" placeholder="Enter password" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn-navy">Sign In</button>
+        </form>
+
+        <form id="signupForm" class="hidden">
+            <h2 class="text-center mb-4" style="color: var(--navy);">Create Account</h2>
+            <div class="mb-3">
+                <label for="signupName" class="form-label">Full Name</label>
+                <input type="text" id="signupName" class="form-control" placeholder="Your Name" required autocomplete="name">
+            </div>
+            <div class="mb-3">
+                <label for="signupEmail" class="form-label">Email Address</label>
+                <input type="email" id="signupEmail" class="form-control" placeholder="name@example.com" required autocomplete="email">
+            </div>
+            <div class="mb-3">
+                <label for="signupPassword" class="form-label">Create Password</label>
+                <input type="password" id="signupPassword" class="form-control" placeholder="Min. 8 characters" required autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn-navy">Register Now</button>
+        </form>
+    </div>
+</main>
+
+<footer class="text-center">
+    <div class="container">
+        <p class="mb-0">© 2026 LexiNote | Accessibility First</p>
+    </div>
+</footer>
+
+<script>
+    function toggleAuth(type) {
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const loginTab = document.getElementById('loginTabBtn');
+        const signupTab = document.getElementById('signupTabBtn');
+        const alertBox = document.getElementById('authAlert');
+
+        alertBox.classList.add('hidden');
+
+        if (type === 'login') {
+            loginForm.classList.remove('hidden');
+            signupForm.classList.add('hidden');
+            loginTab.classList.add('active');
+            loginTab.setAttribute('aria-selected', 'true');
+            signupTab.classList.remove('active');
+            signupTab.setAttribute('aria-selected', 'false');
+        } else {
+            loginForm.classList.add('hidden');
+            signupForm.classList.remove('hidden');
+            loginTab.classList.remove('active');
+            loginTab.setAttribute('aria-selected', 'false');
+            signupTab.classList.add('active');
+            signupTab.setAttribute('aria-selected', 'true');
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
