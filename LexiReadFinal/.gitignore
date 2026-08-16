@@ -1,0 +1,31 @@
+# --- Environment & Sensitive Data ---
+.env
+Backend/auth_utils.py  # Hide secrets if not using .env for everything
+
+# --- Python & Caches ---
+**/__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+ENV/
+
+# --- Audio Files ---
+# Ignore generated audio clips to keep the repository size small
+audio/*.mp3
+audio/*.wav
+
+# --- Database & Local Storage ---
+# Prevents sharing your personal user data or local test records
+lexinote.db
+lexinote.db-journal
+
+# --- IDE & OS Files ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# --- Cleanup ---
+# Your image shows requirements.txt.txt; you may want to rename that to just requirements.txt
+requirements.txt.txt
