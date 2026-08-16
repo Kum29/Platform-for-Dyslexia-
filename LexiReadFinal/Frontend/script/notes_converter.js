@@ -107,23 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
         applyStyles();
     }
 
-    // Manual typing update
-    textarea?.addEventListener("input", async (e) => {
-        const text = e.target.value;
-
-        // Store real words for TTS (important)
-        rawWords = text.trim().split(/\s+/).filter(w => w.length > 0);
-
-        // 🔥 HARDCODED SYLLABLE OUTPUT
-        const forcedText = `Dys-lexia is a com-mon, life-long neuro develop-men-tal learn-ing dis-or-der that affects an person's abil-i-ty to read, spel-l, write, and pro-cess lang-u-age. Con-trary to pop-u-lar be-lief, it is not a re-flec-tion of in-tel-li-gence, nor is it caused by vision prob-lems, lazi-ness, or poor teach-ing.`;
-        const normalText = `Dyslexia is a common, life-long neuro developmental learning disorder that affects an person's ability to read, spell, write, and process language. Contrary to popular belief, it is not a reflection of intelligence, nor is it caused by vision problems, laziness, or poor teaching.`;
-        // Convert to display format (split by space)
-        syllables_list = forcedText.split(" ");
-        window.NORMAL_WORDS = normalText.split(/\s+/);
-        // Always show syllable version for manual input
-        renderWords(syllables_list);
-    });
-
     /* ----------------------------------------------------------------------
         4. HIGHLIGHTING & AUDIO ENGINE
        ---------------------------------------------------------------------- */
@@ -185,28 +168,44 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     async function handleFileUpload(file, endpoint, fileNameElementId) {
-        if (!file) return;
+    if (!file) return;
 
-        document.getElementById(fileNameElementId).textContent = `📄 ${file.name}`;
-        statusDisplay.textContent = "Ready";
+    document.getElementById(fileNameElementId).textContent = `📄 ${file.name}`;
+    statusDisplay.textContent = "Processing...";
 
-        // 🔥 FORCED SYLLABLE TEXT (display + audio)
-        const FORCEDTEXT = `Tom suf-fered a mas-sive heart at-tack mid-race but some-how stayed up-right in the sad-dle un-til his horse, Sweet Kiss, crossed the fin-ish line in first place at twen-ty-one odds. The "win" was-n't dis-cov-ered to be a trag-e-dy un-til the own-er and of-fi-cials went to con-grat-u-late him in the win-ner's cir-cle.`;
-        const normaltext = `Tom suffered a massive heart attack mid-race but somehow stayed upright in the saddle until his horse, Sweet Kiss, crossed the finish line in first place at 20-1 odds. The "win" wasn't discovered to be a tragedy until the owner and officials went to congratulate him in the winner's circle.`;
-        // Split into words for system compatibility
-        syllables_list = FORCEDTEXT.split(" ");
+    const formData = new FormData();
+    formData.append("file", file);
 
-        // IMPORTANT: rawWords also same (so audio matches display)
-        rawWords = normaltext.replace(/-/g, " ").split(/\s+/);
+    try {
+        const response = await fetch(`http://127.0.0.1:8003/notes/${endpoint}`, {
+            method: "POST",
+            body: formData
+        });
 
-        // Show in textarea (optional but clean)
-        textarea.value = FORCEDTEXT;
-        window.NORMAL_WORDS = normaltext.split(/\s+/);
-        window.showInput('textSection', document.getElementById('textTab'));
+        const data = await response.json();
+        console.log(data);
 
-        // Always render syllable version
-        renderWords(syllables_list);
+        if (data.status !== "success") {
+            statusDisplay.textContent = data.message;
+            return;
+        }
+
+        textarea.value = data.extracted_text;
+
+        rawWords = data.words;
+        syllables_list = data.syllables;
+        window.NORMAL_WORDS = data.words;
+
+        renderWords(rawWords);
+
+        statusDisplay.textContent = "Done";
+        window.showInput("textSection", document.getElementById("textTab"));
+
+    } catch (err) {
+        console.error(err);
+        statusDisplay.textContent = "API Error";
     }
+}
 
     pdfInput?.addEventListener("change", (e) => handleFileUpload(e.target.files[0], "extract-pdf", "fileName"));
     hwInput?.addEventListener("change", (e) => handleFileUpload(e.target.files[0], "trocr", "hwFileName"));
