@@ -20,11 +20,11 @@ app.add_middleware(
 )
 
 # ================= ROUTER REGISTRATION =================
-# try:
-#     from notes_backend import router as notes_router
-#     app.include_router(notes_router, prefix="/notes", tags=["Notes Converter"])
-# except ImportError as e:
-#     print(f"⚠️ Warning: Notes Router could not be loaded. {e}")
+try:
+    from notes_backend import router as notes_router
+    app.include_router(notes_router, prefix="/notes", tags=["Notes Converter"])
+except ImportError as e:
+    print(f"⚠️ Warning: Notes Router could not be loaded. {e}")
 
 try:
     from notes_backend import router as pdf_router

@@ -1,6 +1,5 @@
 import io
 from fastapi.responses import FileResponse
-from sympy import content
 import uvicorn
 import os
 import pyphen
@@ -12,7 +11,7 @@ from PIL import Image
 from dotenv import load_dotenv
 # from auth_utils import get_current_user 
 
-# ================= CONFIGURATION =================
+# ================= CONFIGURASTION =================
 load_dotenv()
 SECRET_KEY = os.getenv("SECRET_KEY") # This should now be 64 chars long
 router = APIRouter(tags=["Notes Converter"])
@@ -72,7 +71,7 @@ def restore_broken_text(raw_text: str) -> str:
 
 # ================= ROUTES =================
 
-PDF_FOLDER = r"D:\prj\deslexia\LLexiReadFinal\LexiReadFinal\Frontend"
+PDF_FOLDER = r"D:\dyslexia\Frontend"
 
 @router.get("/get-notes")
 def get_notes():
